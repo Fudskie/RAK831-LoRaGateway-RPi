@@ -13,7 +13,7 @@ SCRIPT_DIR=$(pwd)
 VERSION="master"
 if [[ $1 != "" ]]; then VERSION=$1; fi
 
-echo "The Things Network Gateway installer"
+echo "The LoRa Gateway installer"
 echo "Version: $VERSION"
 
 # Request gateway configuration data
@@ -37,9 +37,9 @@ GATEWAY_EUI=${GATEWAY_EUI^^} # toupper
 echo "Detected Gateway EUI $GATEWAY_EUI from $GATEWAY_EUI_NIC"
 
 
-printf "       Hostname [ttn-gateway]:"
+printf "       Hostname [gateway]:"
 read NEW_HOSTNAME
-if [[ $NEW_HOSTNAME == "" ]]; then NEW_HOSTNAME="ttn-gateway"; fi
+if [[ $NEW_HOSTNAME == "" ]]; then NEW_HOSTNAME="gateway"; fi
 
 printf "       Region AS1, AS2, AU, CN, EU, IN, KR, RU, US [EU]:"
 read NEW_REGION
@@ -78,7 +78,7 @@ echo "Installing dependencies..."
 apt-get install git
 
 # Install LoRaWAN packet forwarder repositories
-INSTALL_DIR="/opt/ttn-gateway"
+INSTALL_DIR="/opt/gateway"
 if [ ! -d "$INSTALL_DIR" ]; then mkdir $INSTALL_DIR; fi
 pushd $INSTALL_DIR
 
@@ -121,13 +121,12 @@ popd
 
 echo "Gateway EUI is: $GATEWAY_EUI"
 echo "The hostname is: $NEW_HOSTNAME"
-echo "Open TTN console and register your gateway using your EUI: https://console.thethingsnetwork.org/gateways"
 echo
 echo "Installation completed."
 
 # Start packet forwarder as a service
-cp $SCRIPT_DIR/ttn-gateway.service /lib/systemd/system/
-systemctl enable ttn-gateway.service
+cp $SCRIPT_DIR/gateway.service /lib/systemd/system/
+systemctl enable gateway.service
 
 # add config "dtoverlay=pi3-disable-bt" to config.txt
 linenum=`sed -n '/dtoverlay=pi3-disable-bt/=' /boot/config.txt`
